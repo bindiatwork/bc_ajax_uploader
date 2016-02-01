@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>An ajax file upload through AJAX and FormData object</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/theme.css" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+  <header></header>
+  <div class="container">
+    <div style="margin-top:10px;" class="jumbotron">
+      <h2>An ajax file upload through AJAX and FormData object</h2>
+      <p>This is the instruction</p>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <form id="file-form" class="form-inline">
+          <div style="margin-right: 5px;" class="form-group">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <label id="fileupload" for="filepicker" class="btn btn-success">
+                  <i style="margin-right: 5px;" class="fa fa-search"></i>
+                  <span>Browse</span>
+                  <input id="filepicker" type="file" name="files[]" style="display: none;">
+                </label>
+              </span>
+              <input type="text" disabled placeholder="file to upload" class="form-control">
+            </div>
+          </div>
+          <button id="upload-button" class="btn btn-primary">
+            <i style="margin-right: 5px;" class="fa fa-upload"></i>
+            <span>Upload</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+var form = document.getElementById('file-form');
+var fileSelect = document.getElementById('filepicker');
+var uploadButton = document.getElementById('upload-button');
+
+form.onsubmit = function(event) {
+  event.preventDefault();
+
+  // Update button text.
+  uploadButton.innerHTML = 'Uploading...';
+
+  // The rest of the code will go here...
+
+  // Get the selected files from the input.
+  var files = fileSelect.files;
+  // Create a new FormData object.
+  var formData = new FormData();
+
+  // Loop through each of the selected files.
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+
+    // Check the file type.
+    if (!file.type.match('image.*')) {
+       continue;
+    }
+
+    // Add the file to the request.
+    formData.append('photos[]', file, file.name);
+  }
+  // Set up the request.
+  var xhr = new XMLHttpRequest();
+
+  // Open the connection.
+  xhr.open('POST', 'http://127.0.0.1:3000/apps/en/administrator', true);
+
+  // Set up a handler for when the request finishes.
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // File(s) uploaded.
+      uploadButton.innerHTML = 'Upload';
+    } else {
+      alert('An error occurred!');
+    }
+  };
+
+  // Send the Data.
+  xhr.send(formData);
+
+}
+</script>
+
+<!-- BootStrap V3.3.6 JS -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+</body>
+</html>
